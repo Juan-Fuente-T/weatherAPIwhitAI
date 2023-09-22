@@ -1,0 +1,6 @@
+#Dependencies
+node modules/
+venv/
+
+
+package-lock.json
