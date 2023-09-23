@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Input,chakra } from '@chakra-ui/react';
 
 function InfoWindow({ label, value, onChange }) {
   try{
@@ -8,8 +8,15 @@ function InfoWindow({ label, value, onChange }) {
         <Box>
         <label>{label}:</label>
         </Box>
-        <Box borderWidth="11px" borderRadius="md" p="3" mb="4">
-        <input
+        <Box 
+        borderWidth="11px" 
+        borderRadius="md" 
+        p="3" 
+        mb="4"
+        
+       
+        >
+        <Input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -22,4 +29,4 @@ function InfoWindow({ label, value, onChange }) {
     return null; //se devuelve null con un mensaje de error
   }
 }
-export default InfoWindow;
+export default chakra(InfoWindow);

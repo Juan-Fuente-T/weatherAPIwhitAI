@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Heading, Divider, Flex } from '@chakra-ui/react';
+import { Box, Heading, Divider, Flex,ChakraProvider, extendTheme } from '@chakra-ui/react';
 import InfoWindow from './InfoWindow';
 import weatherCodes from './weathercodesList.js'
 
@@ -69,35 +69,55 @@ function WeatherDisplay({ datosMeteorologicos }) {
       [key]: newValue,
  }));
 };
-  
 
-  return (
-    <Box p={4}
-        height="100%" // Altura del contenedor
-        display="flex" // Hacer que los elementos dentro se comporten como una fila
-        flexDirection={'column'}
-        justifyContent="space-between" // Espacio entre los elementos
-        alignItems="center" // Alinear verticalmente los elementos
-        padding="20px" // Espacio interior
-        
-    >
-      <Heading size="lg" color={'teal.800'} >Información Meteorológica</Heading>
+return (
+  <ChakraProvider>
+    <Box p={4}>
+      <Box mt={4} width={'100%'} padding={'2%'} backgroundColor={'teal.800'} borderRadius={'10px'}>
+        <InfoWindow
+          width={'110px'}
+          backgroundColor={'teal.600'}
+          label="Descripción"
+          value={respuestaOpenAI ? respuestaOpenAI : 'No disponible'}
+          onChange={(value) => handleRespuestaOpenAiChange('respuesta_openAI', value)}
+        />
+      </Box>
 
       <Divider my={4} />
 
-      <Flex p={4}  flexDirection="row" justifyContent="space-between" alignItems="stretch"
-      backgroundColor={'teal.800'}
-      borderRadius="10px" // Redondea las esquinas 
-    >
+      <Heading size="lg" color={'teal.800'}>
+        Información Meteorológica
+      </Heading>
+
+      <Divider my={4} />
+
+      <Flex
+        p={4}
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="stretch"
+        backgroundColor={'teal.800'}
+        borderRadius="10px"
+      >
         {/* Sección Izquierda */}
-        <Flex flexDirection="column" justifyContent="space-between" alignItems="center" padding="20px" 
-        margin="10px" backgroundColor={'teal.500'} flex={1} borderRadius="10px" // Redondea las esquinas de la zona izquierda
+        <Flex
+          flexDirection="column"
+          justifyContent="space-between"
+          alignItems="center"
+          padding="20px"
+          margin="10px"
+          backgroundColor={'teal.500'}
+          flex={1}
+          borderRadius="10px"
         >
           <Heading size="md">Tiempo Actual</Heading>
           <InfoWindow
             label="Previsión"
-            value={currentWeather && weatherCodes.hasOwnProperty(currentWeather.weathercode) ? weatherCodes[currentWeather.weathercode] : 'No disponible'}
-
+            value={
+              currentWeather && weatherCodes.hasOwnProperty(currentWeather.weathercode)
+                ? weatherCodes[currentWeather.weathercode]
+                : 'No disponible'
+            }
             onChange={(value) => handleCurrentWeatherChange('weathercode', value)}
           />
           <InfoWindow
@@ -105,19 +125,24 @@ function WeatherDisplay({ datosMeteorologicos }) {
             value={currentWeather.temperature || 'No disponible'}
             onChange={(value) => handleCurrentWeatherChange('temperature', value)}
           />
-          {/* Otros detalles del tiempo actual */}
         </Flex>
 
         {/* Sección Derecha */}
-        <Flex flexDirection="column" justifyContent="space-between" alignItems="center" padding="20px"
-         margin="10px" backgroundColor={'teal.500'} flex={2}borderRadius="10px" // Redondea las esquinas de la zona derecha
-         >
-          <Heading size="md" >Previsión para mañana</Heading>
+        <Flex
+          flexDirection="column"
+          justifyContent="space-between"
+          alignItems="center"
+          padding="20px"
+          margin="10px"
+          backgroundColor={'teal.500'}
+          flex={2}
+          borderRadius="10px"
+        >
+          <Heading size="md">Previsión para mañana</Heading>
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center" padding="20px">
             <InfoWindow
               label="Previsión para mañana"
               value={currentWeather && weatherCodes.hasOwnProperty(currentWeather.weathercode) ? weatherCodes[currentWeather.weathercode] : 'No disponible'}
-
               onChange={(value) => handleCurrentWeatherChange('weathercode', value)}
             />
             <InfoWindow
@@ -135,31 +160,13 @@ function WeatherDisplay({ datosMeteorologicos }) {
             <InfoWindow
               label="Temperatura Mínima"
               value={dailyForecast.apparent_temperature_min ? `${dailyForecast.apparent_temperature_min[1]}°C` : 'No disponible'}
-              
               onChange={(value) => handleDailyForecastChange('apparent_temperature_min', value)}
             />
           </Flex>
         </Flex>
       </Flex>
-              
-
-      <Divider my={4} />
-
-      <Box mt={4}
-      width={'100%'}
-      padding={'2%'}
-      backgroundColor={'teal.800'}
-      borderRadius={'10px'}
-      >
-        <InfoWindow
-          label="Descripción"
-          value ={respuestaOpenAI? respuestaOpenAI : 'No disponible' }
-          onChange={(value) => handleRespuestaOpenAiChange('respuesta_openAI', value)}
-        />
-      </Box>
     </Box>
-    
-  );
+  </ChakraProvider>
+);
 }
-
 export default WeatherDisplay;
