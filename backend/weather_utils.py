@@ -110,11 +110,8 @@ def get_weather(latitude, longitude, timezone):
         "forecast_days": 7
     }
 
-    print("URLBase", url_base)
     weather_response = requests.get(url_base, params=params)
-   
     
-    print("Respuesta directa:", weather_response)
     weather = weather_response.json()
     return weather
 """    
@@ -130,13 +127,26 @@ weather_response = requests.get(url_base)
 print("Datos meteorológicos:", weather_data)
 """
 
+# Importa la clave de la API desde tu archivo .env
+openai_api_key = config("api_key")
+
+# Configura la URL de la API de OpenAI
+URL = "https://api.openai.com/v1/chat/completions"
+
+# Configura los encabezados de la solicitud
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {openai_api_key}"
+}
+
+
 #funcion que realiza una consulta a openAI
     
-"""def consulta_openAI (location_or_postal_code):
+def consulta_openAI (location_or_postal_code):
     payload = {
         "model": "gpt-3.5-turbo",
         "messages" : [
-            {"role": "system", "content": f"Eres un asistente que proporciona información meteorologica relevante en un tono coloquial y simpatico pero muy conciso y dando los datos principales con gracia. Evitar nombrar {postal_code} en la respuesta."},
+            {"role": "system", "content": f"Eres un asistente que proporciona información meteorologica relevante en un tono coloquial y simpatico pero muy conciso y dando los datos principales con gracia. Evitar nombrar el postal_code en la respuesta."},
             {"role": "user", "content": f"¿Que tiempo hace ahora en {location_or_postal_code}?, ¿Cuál es la previsión para los próximos días?, ¿Se esperan cambios importantes en el clima de para los próximos días? ¿Cuáles?"}
         ]
     }
@@ -153,5 +163,5 @@ print("Datos meteorológicos:", weather_data)
     else:
         # Si no, devuelve un mensaje de error
         return "Error: La respuesta de la API no incluye el campo 'choices'."
-        """
+        
 

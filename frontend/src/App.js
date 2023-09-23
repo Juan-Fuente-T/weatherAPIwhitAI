@@ -22,8 +22,11 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         console.log("Datos recibidos del servidor:", data);
-        setDatosMeteorologicos(data.datos_meteorologicos);
-      })
+        setDatosMeteorologicos({
+          datos_meteorologicos: data.datos_meteorologicos,
+          respuesta_openAI: data.respuesta_openAI,
+      });
+    })
       .catch((error) => {
         console.error('Error al consultar el tiempo:', error);
       });
@@ -42,7 +45,8 @@ function App() {
     </ChakraProvider>
   );
 }
-  
+export default App;
+
 /*
   return (
     <div className="App">
@@ -55,5 +59,3 @@ function App() {
   );
 }
 */
-
-export default App;

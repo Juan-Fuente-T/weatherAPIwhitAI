@@ -4,13 +4,17 @@ import { Box } from '@chakra-ui/react';
 function InfoWindow({ label, value, onChange }) {
   try{
     return (
-      <Box borderWidth="11px" borderRadius="md" p="3" mb="4">
-      <label>{label}:</label>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
+      <Box>
+        <Box>
+        <label>{label}:</label>
+        </Box>
+        <Box borderWidth="11px" borderRadius="md" p="3" mb="4">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      </Box>
     </Box>
     );
   }catch (error){

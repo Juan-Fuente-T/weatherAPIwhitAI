@@ -1,6 +1,6 @@
 
 from flask import Flask, request, jsonify
-from weather_utils import is_postal_code, geocode_location, geocode_postal_code, get_weather#, consulta_openAI#, get_timezone
+from weather_utils import is_postal_code, geocode_location, geocode_postal_code, get_weather, consulta_openAI#, get_timezone
 from flask_cors import CORS
 import logging
 
@@ -50,20 +50,30 @@ def consulta_tiempo():
     if is_postal_code(input_value):
         postal_code = input_value
         location = None
+        #respuesta_openAI = consulta_openAI(postal_code)
+        respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar de la ciudad!"
+        
     else:
         app.logger.debug("Else de location")
         location = input_value
         postal_code = None
+        #respuesta_openAI = consulta_openAI(location)
+        respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar de la ciudad!"
+        print("Respuesta AI Location:", respuesta_openAI)
+        app.logger.debug(respuesta_openAI)
+        
 
     if location:
         #tiempo = consulta_openAI(location)
         app.logger.debug("Llamada a location")
         latitude, longitude, timezone = geocode_location(location)
         #print("Lat, long y timezone location:", latitude, longitude, timezone)
+        
     elif postal_code:
         #tiempo = consulta_openAI(postal_code)
         latitude, longitude, timezone = geocode_postal_code(postal_code)
         #print("Lat, long y timezone postal code:", latitude, longitude, timezone)
+        
     else:
         return jsonify({"error": "Ubicación o código postal no válidos"}), 400
 
@@ -74,7 +84,17 @@ def consulta_tiempo():
         print("Datos meteorologicos:", weather)
         app.logger.debug("El return deberia funcionar")
         #return f'Los datos meteorológicos son: {weather}'
-        return jsonify({"datos_meteorologicos": weather})
+            # Genera o recupera los datos que deseas enviar
+        data = {
+            "respuesta_openAI": respuesta_openAI,
+            "datos_meteorologicos": weather
+        }
+        app.logger.debug(data)
+        # Imprime los datos en la terminal del servidor
+        print("Datos que se enviarán al cliente:", data)
+
+
+        return jsonify({"respuesta_openAI": respuesta_openAI, "datos_meteorologicos": weather})
     else:
         return jsonify({"error": "No se pudieron obtener coordenadas o zona horaria para la ubicación."}), 400
 
