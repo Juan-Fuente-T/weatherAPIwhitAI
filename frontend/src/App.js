@@ -36,10 +36,10 @@ function App() {
   return (
     <ChakraProvider> {/* Envuelve tu aplicación con ChakraProvider */}
       <Box textAlign="center" p={4}>
-        <Heading as="h1" size="2xl">
-          Aplicación de Pronóstico del MAL Tiempo
+        <Heading as="h1" size="2xl" color={'teal.800'} >
+          Aplicación de Pronóstico del Tiempo con AI
         </Heading>
-        <InputForm consultarTiempo={consultarTiempo} />
+        <InputForm consultarTiempo={consultarTiempo} font color={'teal.800'}/>
         <WeatherDisplay datosMeteorologicos={datosMeteorologicos || {}} />
       </Box>
     </ChakraProvider>

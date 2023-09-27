@@ -73,20 +73,29 @@ function WeatherDisplay({ datosMeteorologicos }) {
 return (
   <ChakraProvider>
     <Box p={4}>
-      <Box mt={4} width={'100%'} padding={'2%'} backgroundColor={'teal.800'} borderRadius={'10px'}>
-        <InfoWindow
-          width={'110px'}
-          backgroundColor={'teal.600'}
-          label="Descripción"
-          value={respuestaOpenAI ? respuestaOpenAI : 'No disponible'}
-          onChange={(value) => handleRespuestaOpenAiChange('respuesta_openAI', value)}
-        />
+      <Box 
+        size = {'sm'}
+        textColor={'darkAlfa.900'}
+        fontSize="1.9xl"
+        fontWeight="bold"
+        backgroundColor={'teal.800'} 
+        borderRadius={'10px'} 
+        p={'2%'}
+        alignItems={'center'}
+          >
+        <Box mt={4} width={'100%'} padding={'2%'} backgroundColor={'teal.500'} borderRadius={'10px'} size={'sm'}>
+          <InfoWindow
+            label="Información Meteorológica"
+            value={respuestaOpenAI ? respuestaOpenAI : 'No disponible'}
+            onChange={(value) => handleRespuestaOpenAiChange('respuesta_openAI', value)}
+            />
+        </Box>
       </Box>
 
       <Divider my={4} />
 
       <Heading size="lg" color={'teal.800'}>
-        Información Meteorológica
+        Información Detallada
       </Heading>
 
       <Divider my={4} />
@@ -95,14 +104,18 @@ return (
         p={4}
         flexDirection="row"
         justifyContent="space-between"
-        alignItems="stretch"
+        alignItems={'normal'}
         backgroundColor={'teal.800'}
         borderRadius="10px"
       >
         {/* Sección Izquierda */}
         <Flex
+        text
+          textColor={'darkAlfa.900'}
+          fontSize="1.9xl"
+          fontWeight="bold"
           flexDirection="column"
-          justifyContent="space-between"
+          justifyContent="space-around"
           alignItems="center"
           padding="20px"
           margin="10px"
@@ -110,7 +123,7 @@ return (
           flex={1}
           borderRadius="10px"
         >
-          <Heading size="md">Tiempo Actual</Heading>
+          <Heading size="md" mb={'-9%'}>Tiempo Actual</Heading>
           <InfoWindow
             label="Previsión"
             value={
@@ -129,16 +142,19 @@ return (
 
         {/* Sección Derecha */}
         <Flex
+          textColor={'darkAlfa.900'}
+          fontSize="1.9xl"
+          fontWeight="bold"
           flexDirection="column"
-          justifyContent="space-between"
-          alignItems="center"
+          justifyContent={'space-around'}
+          alignItems="normal"
           padding="20px"
           margin="10px"
           backgroundColor={'teal.500'}
           flex={2}
           borderRadius="10px"
         >
-          <Heading size="md">Previsión para mañana</Heading>
+          <Heading size="md" pt={'3%'}>Previsión para mañana</Heading>
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center" padding="20px">
             <InfoWindow
               label="Previsión para mañana"
