@@ -18,7 +18,7 @@ def consulta_tiempo(input_value):
     else:
         location = input_value
         postal_code = None
-        respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar de la ciudad!"
+        respuesta_openAI = "¡Hola! En Vigo el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar de la ciudad!"
         #respuesta_openAI = consulta_openAI(location)
         #print("Respuesta AI Location:", respuesta_openAI)
         

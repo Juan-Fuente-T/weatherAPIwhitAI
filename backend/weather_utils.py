@@ -132,7 +132,7 @@ openai_api_key = config("api_key")
 
 # Configura la URL de la API de OpenAI
 URL = "https://api.openai.com/v1/chat/completions"
-
+print("URL_API_OPENAI",URL)
 # Configura los encabezados de la solicitud
 headers = {
     "Content-Type": "application/json",
@@ -154,7 +154,7 @@ def consulta_openAI (location_or_postal_code):
     response = requests.post(URL, headers=headers, json=payload)
 
     response = response.json()
-    
+    print("Response OpenAI:", response)
     #print(response)
 
     # Verifica si la respuesta incluye el campo 'choices'
