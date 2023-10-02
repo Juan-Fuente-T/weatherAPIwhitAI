@@ -4,5 +4,9 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "framer-motion": "^10.16.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "babel": "^7.14.9"
   }
 }

@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from weather_utils import is_postal_code, geocode_location, geocode_postal_code, get_weather, consulta_openAI#, get_timezone
 from flask_cors import CORS
 import logging
+from decouple import config
 
 
 # Crea una instancia de la aplicación Flask
@@ -15,8 +16,9 @@ import logging
 
 # Crea una instancia de la aplicación Flask
 app = Flask(__name__)
+_ORIGIN = config('_ORIGIN')
 CORS(app) 
-CORS(app, resources={r"/consulta": {"origins": "http://localhost:3000/"}})
+CORS(app, resources={r"/consulta": {"origins": _ORIGIN}})
 
 app.logger.setLevel(logging.DEBUG)
 
@@ -50,15 +52,15 @@ def consulta_tiempo():
     if is_postal_code(input_value):
         postal_code = input_value
         location = None
-        #respuesta_openAI = consulta_openAI(postal_code)
-        respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar de la ciudad!"
+        respuesta_openAI = consulta_openAI(postal_code)
+        #respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar de la ciudad!"
         
     else:
         app.logger.debug("Else de location")
         location = input_value
         postal_code = None
-        #respuesta_openAI = consulta_openAI(location)
-        respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar de la ciudad!"
+        respuesta_openAI = consulta_openAI(location)
+        #respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar de la ciudad!"
         print("Respuesta AI Location:", respuesta_openAI)
         app.logger.debug(respuesta_openAI)
         
