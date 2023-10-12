@@ -15,13 +15,13 @@ function App() {
   const consultarTiempo = (inputValue) => {
     // Realizar una solicitud a la API de Flask con el inputValue del usuario
     //Se configura como POST
-    console.log("Procces",process.env.REACT_APP_ORIGIN);
+    
     fetch('http://juanfuente.pythonanywhere.com/consulta', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         //'Origin': process.env.REACT_APP_ORIGIN 
-        'Origin': process.env.REACT_APP_ORIGIN 
+        'Origin': window.location.origin
       },
       //se construye la solicitud con el valor del input del usuario, segun el valor enviado se espera una respuesta u otra
       body: JSON.stringify({ input_value: inputValue }), 
