@@ -7,16 +7,9 @@ from decouple import config
 
 
 # Crea una instancia de la aplicación Flask
-
-from flask import Flask, request, jsonify
-from weather_utils import is_postal_code, geocode_location, geocode_postal_code, get_weather#, consulta_openAI, get_timezone
-from flask_cors import CORS
-import logging
-
-
-# Crea una instancia de la aplicación Flask
 app = Flask(__name__)
-_ORIGIN = config('_ORIGIN')
+#_ORIGIN = config('_ORIGIN')
+_ORIGIN = "http://localhost:5000/"
 CORS(app) 
 CORS(app, resources={r"/consulta": {"origins": _ORIGIN}})
 
@@ -54,13 +47,14 @@ def consulta_tiempo():
         location = None
         respuesta_openAI = consulta_openAI(postal_code)
         #respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar de la ciudad!"
+        #respuesta_openAI = "¡Hola! En Luarca, el tiempo actual es soleado y agradable. Para los próximos días, la previsión indica cielos despejados y temperaturas suaves. No se esperan cambios importantes en el clima, así que puedes disfrutar del buen tiempo sin preocupaciones. ¡Aprovecha para salir y disfrutar del día!"
         
     else:
         app.logger.debug("Else de location")
         location = input_value
         postal_code = None
         respuesta_openAI = consulta_openAI(location)
-        #respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar de la ciudad!"
+        #respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas. No se esperan cambios importantes en el clima, así que podrás seguir disfrutando del buen tiempo. ¡Aprovecha para tomar el sol y disfrutar gggg"
         print("Respuesta AI Location:", respuesta_openAI)
         app.logger.debug(respuesta_openAI)
         
@@ -81,7 +75,7 @@ def consulta_tiempo():
 
     if latitude is not None and longitude is not None and timezone is not None:
         # Llamar a get_weather con los valores obtenidos
-        weather= get_weather(latitude, longitude, timezone)
+        weather= get_weather(latitude, longitude, timezone, location)
         #return jsonify({"tiempo": tiempo, "datos_meteorologicos": weather_data})
         print("Datos meteorologicos:", weather)
         app.logger.debug("El return deberia funcionar")

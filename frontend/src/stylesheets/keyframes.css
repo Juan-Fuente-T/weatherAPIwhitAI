@@ -1,9 +1,9 @@
 @keyframes scroll {
   0% {
-    text-indent: 10%; /* Empieza con el texto completamente fuera de la vista */
+    text-indent: 20%; /* Empieza con el texto completamente fuera de la vista */
   }
   100% {
-    text-indent: -100%; /* Mueve el texto completamente a la izquierda para mostrarlo */
+    text-indent: -80%; /* Mueve el texto completamente a la izquierda para mostrarlo */
   }
 }
 
@@ -11,14 +11,18 @@
 /* Clase para animación más lenta */
 .scroll-slow {
   white-space: nowrap;
-  animation: scroll 20s linear infinite;
+  overflow: hidden; /* Oculta el texto que desborda el contenedor */
+  animation: scroll 30s linear infinite;
 }
 
 /* Clase para animación más rápida */
 .scroll-fast {
   white-space: nowrap;
+  overflow: hidden;
   animation: scroll 4s linear infinite;
+  width: 100px;
 }
+
 
 
 /*

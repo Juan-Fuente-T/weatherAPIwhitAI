@@ -1,6 +1,5 @@
 
-import requests #se necesita requests instalado con pip para hacer llamada a la API de conversion
-
+import requests 
 from geopy.exc import GeocoderTimedOut
 from geopy.geocoders import Nominatim
 import pgeocode
@@ -25,15 +24,15 @@ def is_postal_code(input_value):
 #funcion que comprueba que el codigo postal sea valido en cuyo caso devuelve la longitud y latitud
 
 def geocode_postal_code(postal_code):
-    geocoder = pgeocode.Nominatim('es')
-    location_data = geocoder.query_postal_code(postal_code)
-    latitude = location_data.latitude if not location_data.empty else None
-    longitude = location_data.longitude if not location_data.empty else None
+    geocoder = pgeocode.Nominatim('es') #solo es válido con codigos postales españoles
+    location_data = geocoder.query_postal_code(postal_code) #se comprueba el codigo postal
+    latitude = location_data.latitude if not location_data.empty else None #se obtiene la latitud si el dato es bueno
+    longitude = location_data.longitude if not location_data.empty else None #se obtiene la longitud si el dato es bueno
     
-    if latitude is not None and longitude is not None:
+    if latitude is not None and longitude is not None: #se evalua que tengamos latitud y longitud
         tf = TimezoneFinder()
-        timezone = tf.timezone_at(lng=longitude, lat=latitude)
-        return latitude, longitude, timezone
+        timezone = tf.timezone_at(lng=longitude, lat=latitude) #se obtiene el timezone a partir de la latitud y longitud
+        return latitude, longitude, timezone 
     else:
         return None, None, None
     
@@ -41,23 +40,21 @@ def geocode_postal_code(postal_code):
 #funcion que comprueba la localizacion de una location y devuelve la latitud, longitud y el timezone
 
 def geocode_location(location):
-    print("Comprobando entrada datos Location Nominating:", location)
     geolocator = Nominatim(user_agent="myWeatherApp")
-    print(f"Geocodificando la ubicación: {location}")
-    location_data = geolocator.geocode(location)
-    print("location_data", location)
+    #print(f"Geocodificando la ubicación: {location}") #impresion de control
+    location_data = geolocator.geocode(location) 
     try:
         location_data = geolocator.geocode(location, timeout=10)
-        if location_data:
-            latitude = location_data.latitude
-            longitude = location_data.longitude
+        if location_data:#si la respuesta es buena se obtienen latitud y longitud
+            latitude = location_data.latitude #se va valor a latitud
+            longitude = location_data.longitude #se da valor a longitud
             tf = TimezoneFinder()
-            timezone = tf.timezone_at(lng=longitude, lat=latitude)
-            print(f"Ubicación encontrada. Latitud: {latitude}, Longitud: {longitude}")
+            timezone = tf.timezone_at(lng=longitude, lat=latitude)#se obtiene el timezone a partir de la latitud y longitud
+            #print(f"Ubicación encontrada. Latitud: {latitude}, Longitud: {longitude}") #impresion de control
             return latitude, longitude,timezone
         else:
-            print("No se pudo encontrar la ubicación.")
-            return None, None, None
+            print("No se pudo encontrar la ubicación.") #impresiones de error
+            return None, None, None, None
     except GeocoderTimedOut:
         print("Tiempo de espera agotado al buscar la ubicación.")
         return None
@@ -65,6 +62,7 @@ def geocode_location(location):
         print(f"Ocurrió un error al buscar la ubicación: {e}")
         return None
 
+   
 
 
 #funcion que devuelve el timezone para location o postal_code ¿¿Es necesaria??
@@ -100,7 +98,7 @@ def get_weather(latitude, longitude, timezone):
     url_base = "https://api.open-meteo.com/v1/forecast"
 
 
-    # Parámetros de la solicitud
+    # Parámetros de la solicitud de datos de datos meteorologicos a la API
     params = {
         "latitude": latitude,
         "longitude": longitude,
@@ -110,9 +108,9 @@ def get_weather(latitude, longitude, timezone):
         "forecast_days": 7
     }
 
-    weather_response = requests.get(url_base, params=params)
+    weather_response = requests.get(url_base, params=params) #se hace la llamada a la API
     
-    weather = weather_response.json()
+    weather = weather_response.json() #transforma la respuesta en un objeto manipulable
     return weather
 """    
 latitude = 40.4167047
@@ -127,13 +125,12 @@ weather_response = requests.get(url_base)
 print("Datos meteorológicos:", weather_data)
 """
 
-# Importa la clave de la API desde tu archivo .env
+# Se importa la clave de la API desde el archivo .env
 openai_api_key = config("api_key")
 
-# Configura la URL de la API de OpenAI
+# Se configura la URL de la API de OpenAI
 URL = "https://api.openai.com/v1/chat/completions"
-print("URL_API_OPENAI",URL)
-# Configura los encabezados de la solicitud
+# Se configuran los encabezados de la solicitud
 headers = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {openai_api_key}"
@@ -141,21 +138,19 @@ headers = {
 
 
 #funcion que realiza una consulta a openAI
-    
+ 
 def consulta_openAI (location_or_postal_code):
-    payload = {
+    payload = { #se establecen los parametros de la llamada
         "model": "gpt-3.5-turbo",
         "messages" : [
-            {"role": "system", "content": f"Eres un asistente que proporciona información meteorologica relevante en un tono coloquial y simpatico pero muy conciso y dando los datos principales con gracia. Evitar nombrar el postal_code en la respuesta."},
+            {"role": "system", "content": f"Eres un asistente que proporciona información meteorologica relevante en un tono coloquial y simpatico pero muy conciso y dando los datos principales con gracia.La longitd máxima de la respuesta es de 330 caracteres, y evita nombrar el postal_code."},
             {"role": "user", "content": f"¿Que tiempo hace ahora en {location_or_postal_code}?, ¿Cuál es la previsión para los próximos días?, ¿Se esperan cambios importantes en el clima de para los próximos días? ¿Cuáles?"}
         ]
     }
 
-    response = requests.post(URL, headers=headers, json=payload)
+    response = requests.post(URL, headers=headers, json=payload) #se hace la llamada a la API de openAI, con los parametros que ya se han definido antes
 
-    response = response.json()
-    print("Response OpenAI:", response)
-    #print(response)
+    response = response.json() #transforma la respuesta en un objto manipulable
 
     # Verifica si la respuesta incluye el campo 'choices'
     if 'choices' in response:
@@ -163,5 +158,5 @@ def consulta_openAI (location_or_postal_code):
     else:
         # Si no, devuelve un mensaje de error
         return "Error: La respuesta de la API no incluye el campo 'choices'."
-        
+      
 

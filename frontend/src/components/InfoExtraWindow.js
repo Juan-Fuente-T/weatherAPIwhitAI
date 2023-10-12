@@ -1,40 +1,28 @@
 import React from 'react';
-import { Box, Input, chakra } from '@chakra-ui/react';
+import { Box, Flex, Input, chakra } from '@chakra-ui/react';
 import '../stylesheets/keyframes.css'
 
 //se define el elemento con las props(propiedades) que va a utilizar
-function InfoWindow({ label, value, onChange, customClassName}) {
+function InfoExtraWindow({ label, value, onChange, customClassName}) {
   // Se intenta renderizar el componente InfoWindow
   try {
     // Se devuelve un componente de caja que contiene una etiqueta y un cuadro de entrada
     return (
-      <Box textColor="darkAlfa.900" fontSize="1.9xl" fontWeight="bold" p={'1%'}>
+      <Flex textColor="darkAlfa.900" fontSize="1.9xl" fontWeight="bold" flexDirection={'column'} justifyContent={'center'} pr={'2%'}>
         <Box pb="5%">
           {/* Etiqueta que muestra el nombre del campo */}
           <label>{label}:</label>
         </Box>
         {/* Contenedor que establece el estilo de borde, margen y desplazamiento horizontal */}
-        <Box 
-        borderWidth="6px" 
-        borderRadius="10px" 
-        p="2" 
-        mb="4" 
-        
-        overflowX="auto" 
-        width="100%" 
-        style={{ whiteSpace: 'nowrap' }}
-        justifyContent={['center', 'center', 'start']}
-        alignItems={'center'}>
+        <Box borderWidth="6px" borderRadius="10px" p="2" mb="4" mx="1%" overflowX="auto" width="100%" style={{ whiteSpace: 'nowrap' }} justifyContent={'center'}> 
           {/* Cuadro de entrada de texto */}
           <Input
-            maxWidth={['100%', '100%', '250px']} 
+            width="2500px"
             textColor="darkAlfa.900"
             fontSize={["sm", "md", "lg", "xl", "2xl"]}
             fontWeight="bold"
-            m={'auto'}
-            justifyContent={'center'}
-            alignItems={'center'}
             border="none"
+            justifyContent={'center'}
             type="text"
             // Valor del cuadro de entrada que se muestra
             value={value}
@@ -44,7 +32,7 @@ function InfoWindow({ label, value, onChange, customClassName}) {
             className={customClassName}
           />
         </Box>
-      </Box>
+      </Flex>
     );
   } catch (error) {
     // Capturamos y manejamos errores si ocurren al renderizar el componente
@@ -55,4 +43,4 @@ function InfoWindow({ label, value, onChange, customClassName}) {
 }
 
 // Exportamos el componente InfoWindow con la capacidad de usar características de Chakra UI
-export default chakra(InfoWindow);
+export default chakra(InfoExtraWindow);

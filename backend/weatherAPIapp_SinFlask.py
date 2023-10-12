@@ -32,7 +32,7 @@ def consulta_tiempo(input_value):
         return {"error": "Ubicación o código postal no válidos"}, 400
 
     if latitude is not None and longitude is not None and timezone is not None:
-        weather= get_weather(latitude, longitude, timezone)
+        weather= get_weather(latitude, longitude, timezone,location)
         #print("Weather:", weather)
         #return jsonify({"respuesta_openAI": respuesta_openAI, "datos_meteorologicos": weather})
         response_data = {"respuesta_openAI": respuesta_openAI, "datos_meteorologicos": weather}
