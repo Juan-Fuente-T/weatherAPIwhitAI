@@ -16,7 +16,7 @@ function App() {
     // Realizar una solicitud a la API de Flask con el inputValue del usuario
     //Se configura como POST
     
-    fetch('http://juanfuente.pythonanywhere.com/consulta', {
+    fetch('https://juanfuente.pythonanywhere.com/consulta', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
