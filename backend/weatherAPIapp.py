@@ -73,9 +73,12 @@ def consulta_tiempo():
     
     #se ejecuta la función para obtener los datos meteorologicos
     weather = get_weather(latitude, longitude, timezone)
-
+    
     #se ejecuta la función para obtener respuesta de openAI
     respuesta_openAI = consulta_openAI(postal_code, weather) if postal_code else consulta_openAI(location, weather)
+
+    #respuesta de openAI para pruebas
+    #respuesta_openAI = "¡Hola! En Luarca, el tiempo actual es soleado y agradable. Para los próximos días, la previsión indica cielos despejados y temperaturas suaves. No se esperan cambios importantes en el clima, así que puedes disfrutar del buen tiempo sin preocupaciones. ¡Aprovecha para salir y disfrutar del día!"
 
     #Si hay respuesta valida de ambas apis se unen los datos para enviar al frontend
     if weather and respuesta_openAI:

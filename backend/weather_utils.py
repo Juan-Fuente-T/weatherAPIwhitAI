@@ -11,9 +11,9 @@ from weathercodesList import weatherCodes
 
 #funcion que comprueba que la location introducida sea correcta 
 def is_location(input_value):
-    geolocator = Nominatim(user_agent="myGeocoder")
-    location = geolocator.geocode(input_value)
-    return location is not None
+    # Expresión regular para verificar si el input parece una ubicación válida (solo letras y espacios)
+    location_pattern = r'^[A-Za-z\s]+$'
+    return re.match(location_pattern, input_value) is not None
 
 #funcion que comprueba que el codigo postal introducido sea un formato válido, devuelve true o false  
 def is_postal_code(input_value):
@@ -30,7 +30,7 @@ def is_postal_code(input_value):
 #funcion que comprueba que el codigo postal sea valido en cuyo caso devuelve la longitud y latitud
 
 def geocode_postal_code(postal_code):
-    geocoder = pgeocode.Nominatim('es') #solo es válido con codigos postales españoles
+    geocoder = pgeocode.Nominatim('es', user_agent="myGeocoder")  #solo es válido con codigos postales españoles
     location_data = geocoder.query_postal_code(postal_code) #se comprueba el codigo postal
     latitude = location_data.latitude if not location_data.empty else None #se obtiene la latitud si el dato es bueno
     longitude = location_data.longitude if not location_data.empty else None #se obtiene la longitud si el dato es bueno
