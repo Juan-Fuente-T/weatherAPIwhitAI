@@ -5,11 +5,17 @@ from geopy.geocoders import Nominatim
 import pgeocode
 from timezonefinder import TimezoneFinder
 import re
+import json
 from decouple import config
+from weathercodesList import weatherCodes
 
+#funcion que comprueba que la location introducida sea correcta 
+def is_location(input_value):
+    geolocator = Nominatim(user_agent="myGeocoder")
+    location = geolocator.geocode(input_value)
+    return location is not None
 
-#funcion que comprueba que el codigo postal introducido sea un formato válido, devuelve true o false
-  
+#funcion que comprueba que el codigo postal introducido sea un formato válido, devuelve true o false  
 def is_postal_code(input_value):
 # Expresión regular para verificar si el input es un código postal (formato numérico de 5 dígitos)
     postal_code_pattern = r'^\d{5}$'
@@ -94,9 +100,7 @@ def get_timezone(location):
 
 def get_weather(latitude, longitude, timezone):
 
-    #url_base = config("API_OpenMeteo")
     url_base = "https://api.open-meteo.com/v1/forecast"
-
 
     # Parámetros de la solicitud de datos de datos meteorologicos a la API
     params = {
@@ -107,23 +111,14 @@ def get_weather(latitude, longitude, timezone):
         "current_weather": "true",
         "forecast_days": 7
     }
-
+    #api_OpenMeteo = config("API_OpenMeteo")
     weather_response = requests.get(url_base, params=params) #se hace la llamada a la API
+    #weather_response = requests.get(api_OpenMeteo) #se hace la llamada a la API
     
     weather = weather_response.json() #transforma la respuesta en un objeto manipulable
+
     return weather
-"""    
-latitude = 40.4167047
-longitude = -3.7035825
-timezone = "Europe/Madrid"
-url_base = config("API_OpenMeteo")
-    
-print("LAtit,longi, timez:",latitude,longitude, timezone)
-weather_data = get_weather(latitude, longitude, timezone)
-print("URL completa:", url_base)  # Agregar esta línea para verificar la URL
-weather_response = requests.get(url_base)   
-print("Datos meteorológicos:", weather_data)
-"""
+
 
 # Se importa la clave de la API desde el archivo .env
 openai_api_key = config("api_key")
@@ -137,8 +132,8 @@ headers = {
 }
 
 
-#funcion que realiza una consulta a openAI
- 
+#funcion que realiza una consulta a openAI(ANTIGUA)
+"""
 def consulta_openAI (location_or_postal_code):
     payload = { #se establecen los parametros de la llamada
         "model": "gpt-3.5-turbo",
@@ -155,6 +150,56 @@ def consulta_openAI (location_or_postal_code):
     # Verifica si la respuesta incluye el campo 'choices'
     if 'choices' in response:
         return response['choices'][0]['message']['content']
+    else:
+        # Si no, devuelve un mensaje de error
+        return "Error: La respuesta de la API no incluye el campo 'choices'."
+"""     
+#funcion que realiza una consulta a openAI(OPTIMIZADA)
+def consulta_openAI (location_or_postal_code, weather):
+    
+    # Extraer datos relevantes del tiempo actual para current_weather
+    current_weather = weather['current_weather']
+    # Extraer los datos relevantes del tiempo actual dentro de current_weather
+    temperature = current_weather['temperature']
+    windspeed = current_weather['windspeed']
+    weathercode_today = current_weather['weathercode']
+    #Evaluar que el valor weathercode este en el diccionario de codigos de condiciones meteorologicas y si esta cambiar el nuevo valor por el numero incicial
+    if weathercode_today in weatherCodes:
+        weatherCode = weatherCodes[weathercode_today]
+    else:
+        weatherCode = 'No disponible'#notificacion de error
+
+
+    # Extraer datos de la previsión para siete dias
+    daily_data = weather.get ('daily', {})
+    # Extraer los datos de dentro de la previsión para siete dias
+    max_temperatures = daily_data.get('apparent_temperature_max', 'No disponible') 
+    min_temperatures = daily_data.get('apparent_temperature_min', 'No disponible')
+    rain_probabilities = daily_data.get('precipitation_probability_mean', 'No disponible')
+    weathercodes = daily_data.get('weathercode', 'No disponible')
+    #Cambiar los valores de condiciones meteorologicas por el numero incicial
+    daily_weatherCodes = [weatherCodes.get(code, "Desconocido") for code in weathercodes]
+    
+    # Crear el contenido del mensaje del usuario
+    user_message = f"Dime qué tiempo hace ahora en {location_or_postal_code} y cuál es la previsión y posibilidad de lluvia para los próximos días, sabiendo que el día es {weatherCode}, la temperatura es de {temperature}°C y la velocidad del viento es {windspeed}km/h. Para los próximos días, y por ese orden, estas son las temperaturas esperadas {', '.join(map(str, max_temperatures))}°C,estas las mínimas {', '.join(map(str, min_temperatures))}°C, estas las previsiones {', '.join(map(str, rain_probabilities))}% de lluvia y estas las previsiones del dia {', '.join(map(str, daily_weatherCodes))}."
+
+    payload = {
+        "model": "gpt-3.5-turbo",
+        "messages": [
+            {"role": "system", "content": "Eres un presentador meteorológico cercano y simpático. La longitud máxima de la respuesta es de 330 caracteres, y evita nombrar el postal_code."},
+            {"role": "user", "content": user_message}
+        ]
+    }
+
+    response = requests.post(URL, headers=headers, json=payload) #se hace la llamada a la API de openAI, con los parametros que ya se han definido antes
+
+    response = response.json() #transforma la respuesta en un objto manipulable
+
+    # Verifica si la respuesta incluye el campo 'choices'
+    if 'choices' in response:
+        return response['choices'][0]['message']['content']
+        #'return' de depuracion en probarAPI.py
+        #return weatherCode, daily_weatherCodes
     else:
         # Si no, devuelve un mensaje de error
         return "Error: La respuesta de la API no incluye el campo 'choices'."

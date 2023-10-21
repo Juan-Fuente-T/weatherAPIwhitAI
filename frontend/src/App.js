@@ -21,7 +21,8 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
         //'Origin': process.env.REACT_APP_ORIGIN 
-        'Origin': window.location.origin
+        //'Origin': window.location.origin
+        'Origin': "http://localhost:3000/"
       },
       //se construye la solicitud con el valor del input del usuario, segun el valor enviado se espera una respuesta u otra
       body: JSON.stringify({ input_value: inputValue }), 
@@ -38,11 +39,13 @@ function App() {
       .catch((error) => {
         console.error('Error al consultar el tiempo:', error); //impresion en caso de fallo
       });
+      console.log("WeatherDatos", datosMeteorologicos)
+      
   };
 
 
   return (
-    <ChakraProvider> {/* Se nvuelve la app con ChakraProvider para usar sus componentes UI*/}
+    <ChakraProvider> {/* Se envuelve la app con ChakraProvider para usar sus componentes UI*/}
       <Box textAlign="center" p={4}>
         <Heading as="h1" size="2xl" color={'teal.800'} >
           Pronóstico del Tiempo con AI

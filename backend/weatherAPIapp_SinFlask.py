@@ -32,9 +32,10 @@ def consulta_tiempo(input_value):
         return {"error": "Ubicación o código postal no válidos"}, 400
 
     if latitude is not None and longitude is not None and timezone is not None:
-        weather= get_weather(latitude, longitude, timezone,location)
+        weather= get_weather(latitude, longitude, timezone)
         #print("Weather:", weather)
         #return jsonify({"respuesta_openAI": respuesta_openAI, "datos_meteorologicos": weather})
+        respuesta_openAI = "¡Hola! En Madrid el tiempo ahora mismo es soleado y caluroso, ¡así que prepárate para sudar! Para los próximos días se espera que el sol siga brillando y las temperaturas continúen altas."
         response_data = {"respuesta_openAI": respuesta_openAI, "datos_meteorologicos": weather}
         response_json = json.dumps(response_data, indent=4)  # Convierte los datos a formato JSON con formato
         print("response_json",response_json)
@@ -43,8 +44,9 @@ def consulta_tiempo(input_value):
         return {"error": "No se pudieron obtener coordenadas o zona horaria para la ubicación."}, 400
 
 # Ejemplo de uso
-input_value = 'Madrid'  # Reemplaza con la ubicación o código postal que desees consultar
+
+input_value = '15930'  # Reemplaza con la ubicación o código postal que desees consultar
 result = consulta_tiempo(input_value)
 print("Resultado:",result)
 #print("Respuesta OpenAI:", result.get("respuesta_openAI"))
-#print("Datos Meteorológicos:", result.get("datos_meteorologicos"))
+print("Datos Meteorológicos:", result.get("datos_meteorologicos"))

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Heading, Divider, Flex,ChakraProvider, Text, useBreakpointValue, extendTheme } from '@chakra-ui/react';
 import InfoWindow from './InfoWindow';
-import weatherCodes from './weathercodesList.js'
+import weatherCodes from './weathercodesList.js' 
 import InfoExtraWindow from './InfoExtraWindow';
 
 
@@ -40,7 +40,7 @@ function WeatherDisplay({ datosMeteorologicos }) {
       const contentWidth = content.clientWidth;
       const containerWidth = container.clientWidth;
 
-  
+      //Funcion que desplaza el texto en la ventana principal
       function scrollText() {
         if (contentWidth > containerWidth) {
           content.style.transform = `translateX(${containerWidth}px)`; // Inicializa la posición del texto
@@ -57,7 +57,7 @@ function WeatherDisplay({ datosMeteorologicos }) {
       content.addEventListener('transitionend', () => {
         content.style.transition = 'none';
         content.style.transform = `translateX(${containerWidth}px)`;
-        setTimeout(scrollText, 1000); // Pausa antes de reiniciar
+        setTimeout(scrollText, 500); // Pausa antes de reiniciar
       });
     }
  
