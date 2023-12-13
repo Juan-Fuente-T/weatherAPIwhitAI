@@ -99,3 +99,92 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
+    
+############################VERSION ACTUAL OPTIMIZADA################################
+
+
+from flask import Flask, request, jsonify
+from weather_utils import is_postal_code, geocode_location, geocode_postal_code, get_weather, consulta_openAI, is_location#, get_timezone
+from flask_cors import CORS
+import logging
+
+
+
+# Crea una instancia de la aplicación Flask
+app = Flask(__name__)
+
+#_ORIGIN = "http://localhost:3000/"
+_ORIGIN = "https://dainty-kangaroo-d43f29.netlify.app/"
+CORS(app)
+CORS(app, resources={r"/consulta": {"origins": _ORIGIN}})
+
+#Se habilita un registro de eventos para depuracion
+app.logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s')
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
+
+app.debug = True  # Habilitar el modo de depuración
+
+
+
+# Se define una ruta y una función de vista
+@app.route('/')
+def index():
+    return '¡Hola, esta es tu aplicación de pronóstico del tiempo!'
+
+@app.route('/consulta', methods=['POST'])
+def consulta_tiempo():
+    app.logger.debug("Input_value")
+    data = request.get_json()
+    input_value = data.get('input_value')
+
+    app.logger.debug("Recibida solicitud POST en consulta_tiempo con input_value: %s", input_value)
+
+    #Se inicializan las variables
+    postal_code = None
+    location = None
+
+    #se evalua el tipo d evalor ecibido y se asigna
+    if is_postal_code(input_value):
+        postal_code = input_value
+    elif is_location(input_value):
+        location = input_value
+    else:
+        return jsonify({"error": "Ubicación o código postal no válidos"}), 400 #notificacion en caso de error
+
+
+    if location:
+        latitude, longitude, timezone = geocode_location(location)
+
+    elif postal_code:
+        latitude, longitude, timezone = geocode_postal_code(postal_code)
+
+    else:
+        return jsonify({"error": "Ubicación o código postal no válidos"}), 400
+
+    #se ejecuta la función para obtener los datos meteorologicos
+    weather = get_weather(latitude, longitude, timezone)
+
+    #se ejecuta la función para obtener respuesta de openAI
+    respuesta_openAI = consulta_openAI(postal_code, weather) if postal_code else consulta_openAI(location, weather)
+
+    #respuesta de openAI para pruebas
+    #respuesta_openAI = "¡Hola! En Luarca, el tiempo actual es soleado y agradable. Para los próximos días, la previsión indica cielos despejados y temperaturas suaves. No se esperan cambios importantes en el clima, así que puedes disfrutar del buen tiempo sin preocupaciones. ¡Aprovecha para salir y disfrutar del día!"
+
+    #Si hay respuesta valida de ambas apis se unen los datos para enviar al frontend
+    if weather and respuesta_openAI:
+        data = {
+            "respuesta_openAI": respuesta_openAI,
+            "datos_meteorologicos": weather
+        }
+
+        return jsonify({"respuesta_openAI": respuesta_openAI, "datos_meteorologicos": weather})
+    else:
+        return jsonify({"error": "No se pudieron obtener coordenadas o zona horaria para la ubicación."}), 400
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')

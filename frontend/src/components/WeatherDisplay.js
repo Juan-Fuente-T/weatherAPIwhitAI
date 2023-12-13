@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Heading, Divider, Flex,ChakraProvider, Text, useBreakpointValue, extendTheme } from '@chakra-ui/react';
+import { Box, Heading, Divider, Flex, ChakraProvider, Text, useBreakpointValue, extendTheme } from '@chakra-ui/react';
 import InfoWindow from './InfoWindow';
-import weatherCodes from './weathercodesList.js' 
+import weatherCodes from './weathercodesList.js'
 import InfoExtraWindow from './InfoExtraWindow';
 
 
@@ -34,8 +34,8 @@ function WeatherDisplay({ datosMeteorologicos }) {
     const container = containerRef.current;
     const content = contentRef.current;
 
-    if (container & content){
-       
+    if (container & content) {
+
       const scrollSpeed = 30; // Ajusta la velocidad de desplazamiento según tus preferencias
       const contentWidth = content.clientWidth;
       const containerWidth = container.clientWidth;
@@ -45,7 +45,7 @@ function WeatherDisplay({ datosMeteorologicos }) {
         if (contentWidth > containerWidth) {
           content.style.transform = `translateX(${containerWidth}px)`; // Inicializa la posición del texto
           const animationDuration = (contentWidth / scrollSpeed) * 1000;
-          
+
           content.style.transition = `transform ${animationDuration}ms linear`;
           content.style.transform = `translateX(-${contentWidth}px)`; // Desplaza el texto
         }
@@ -60,7 +60,7 @@ function WeatherDisplay({ datosMeteorologicos }) {
         setTimeout(scrollText, 500); // Pausa antes de reiniciar
       });
     }
- 
+
 
     // Actualizamos los estados con los datos de datosMeteorologicos
     setCurrentWeather(datosMeteorologicos?.datos_meteorologicos?.current_weather || {});
@@ -85,7 +85,7 @@ function WeatherDisplay({ datosMeteorologicos }) {
       [key]: newValue,
     }));
   };
-  console.log("XXXRespuestaAI:", respuestaOpenAI)
+  console.log("RespuestaAI:", respuestaOpenAI)
   // Función para manejar cambios en la respuesta de OpenAI
   const handleRespuestaOpenAiChange = (key, newValue) => {
     setRespuestaOpenAI((prevRespuestaOpenAI) => ({
@@ -97,16 +97,16 @@ function WeatherDisplay({ datosMeteorologicos }) {
   // Se renderiza el componente que muestra las respuestas, WeatherDisplay
   return (
     //Se envuelve todo en Chakra provider para acceder a sus componentes
-    <ChakraProvider> 
+    <ChakraProvider>
       <Box p={4} >
-        <Box 
+        <Box
           margin={'0 auto'}
           size={'sm'}
           textColor={'darkAlfa.900'}
           fontSize="1.9xl"
           fontWeight="bold"
-          backgroundColor={'teal.800'} 
-          borderRadius={'10px'} 
+          backgroundColor={'teal.800'}
+          borderRadius={'10px'}
           p={'2%'}
           alignItems={'center'}
           justifyContent={'center'} >
@@ -117,7 +117,7 @@ function WeatherDisplay({ datosMeteorologicos }) {
                 label="Información Meteorológica"
                 value={respuestaOpenAI ? respuestaOpenAI : 'No disponible'} //se evalua si existen los datos antes de asignarlos o se devuelve No disponible
                 onChange={(value) => handleRespuestaOpenAiChange('respuesta_openAI', value)} //Se asignan los valores correspondientes
-                
+
                 customClassName='scroll-slow' // Se asigna una clase CSS específica para controlar la velocidad de desplazamiento
               />
             </Box>
@@ -133,7 +133,7 @@ function WeatherDisplay({ datosMeteorologicos }) {
         <Divider my={4} />
 
         <Flex
-        
+
           p={4}
           maxW={'100%'}
           flexDirection={useBreakpointValue({ base: "column", md: "row", lg: "row" })}
@@ -142,16 +142,16 @@ function WeatherDisplay({ datosMeteorologicos }) {
           backgroundColor={'teal.800'}
           borderRadius="10px"
           flexWrap={'wrap'}
-          >
+        >
 
           {/* Sección Izquierda */}
           <Flex
-            width={['100%', '100%', '45%']} 
+            width={['100%', '100%', '45%']}
             textColor={'darkAlfa.900'}
             fontSize="1.9xl"
             fontWeight="bold"
             flexDirection="column"
-            justifyContent={'center'} 
+            justifyContent={'center'}
             alignItems={['center', 'center', 'stretch']}
             padding="20px"
             margin={['5px', '5px', '5px']} // 
@@ -159,74 +159,74 @@ function WeatherDisplay({ datosMeteorologicos }) {
             flex={1}
             borderRadius="10px"
             overflowX="auto"
-            //height={'360px'}
-            >
-          <Heading size="md" mb={'1%'}>Tiempo Actual</Heading>
-          <Box mt={useBreakpointValue({ base: 0, md: 4, lg: 4 })}></Box>
-          <InfoWindow
-            label="Tiempo"
-            value={
-              currentWeather && weatherCodes.hasOwnProperty(currentWeather.weathercode)
-                ? weatherCodes[currentWeather.weathercode]
-                : 'No disponible' //se evalua si existen los datos antes de asignarlos o se devuelve No disponible
-            }
-            onChange={(value) => handleCurrentWeatherChange('weathercode', value)}//Se asignan los valores correspondientes
-            customClassName='scroll-fast' // Se asigna una clase CSS específica para controlar la velocidad de desplazamiento
-          />
-          <Box mt={useBreakpointValue({ base: 0, md: 10, lg: 12 })}></Box> {/* Ajusta el espacio vertical según el tamaño de pantalla */}
-          <InfoWindow
-            label="Temperatura"
-            value={currentWeather.temperature || 'No disponible'} //Se cogen el valor si esta dispponible
-            onChange={(value) => handleCurrentWeatherChange('temperature', value)}//Se asignan el valor correspondientes
-          />
+          //height={'360px'}
+          >
+            <Heading size="md" mb={'1%'}>Tiempo Actual</Heading>
+            <Box mt={useBreakpointValue({ base: 0, md: 4, lg: 4 })}></Box>
+            <InfoWindow
+              label="Tiempo"
+              value={
+                currentWeather && weatherCodes.hasOwnProperty(currentWeather.weathercode)
+                  ? weatherCodes[currentWeather.weathercode]
+                  : 'No disponible' //se evalua si existen los datos antes de asignarlos o se devuelve No disponible
+              }
+              onChange={(value) => handleCurrentWeatherChange('weathercode', value)}//Se asignan los valores correspondientes
+              customClassName='scroll-fast' // Se asigna una clase CSS específica para controlar la velocidad de desplazamiento
+            />
+            <Box mt={useBreakpointValue({ base: 0, md: 10, lg: 12 })}></Box> {/* Ajusta el espacio vertical según el tamaño de pantalla */}
+            <InfoWindow
+              label="Temperatura"
+              value={currentWeather.temperature || 'No disponible'} //Se cogen el valor si esta dispponible
+              onChange={(value) => handleCurrentWeatherChange('temperature', value)}//Se asignan el valor correspondientes
+            />
 
           </Flex>
 
-            {/* Sección Derecha */}
-            <Flex
-              width={['100%', '100%', '45%']} 
-              textColor={'darkAlfa.900'}
-              fontSize="1.9xl"
-              fontWeight="bold"
-              flexDirection="column"
-              justifyContent={'center'} 
-              alignItems={['center', 'center', 'stretch']}
-              padding="3%"
-              margin={['5px', '5px', '5px']} // 
-              backgroundColor={'teal.500'}
-              flex={2}
-              borderRadius="10px">
+          {/* Sección Derecha */}
+          <Flex
+            width={['100%', '100%', '45%']}
+            textColor={'darkAlfa.900'}
+            fontSize="1.9xl"
+            fontWeight="bold"
+            flexDirection="column"
+            justifyContent={'center'}
+            alignItems={['center', 'center', 'stretch']}
+            padding="3%"
+            margin={['5px', '5px', '5px']} // 
+            backgroundColor={'teal.500'}
+            flex={2}
+            borderRadius="10px">
 
-              <Heading size="md" pt={'3%'}>Previsión para mañana</Heading>
-              <Flex flexDirection={useBreakpointValue({ base: "column", md: "row", lg: "row" })} justifyContent="space-between" alignItems="center" padding="20px"> 
-                <InfoWindow
-                  label="Previsión para mañana"
-                  value={currentWeather && weatherCodes.hasOwnProperty(currentWeather.weathercode) ? weatherCodes[currentWeather.weathercode] : 'No disponible'} //se evalua si existen los datos antes de asignarlos o se devuelve No disponible
-                  onChange={(value) => handleCurrentWeatherChange('weathercode', value)}
-                  customClassName='scroll-fast' // Se asigna una clase CSS específica para controlar la velocidad de desplazamiento
-                />
-                <InfoWindow
-                  label="Probabilidad de Lluvia"
-                  value={dailyForecast.precipitation_probability_mean ? `${dailyForecast.precipitation_probability_mean[1]}%` : 'No disponible'}//se evalua si existen los datos antes de asignarlos o se devuelve No disponible
-                  onChange={(value) => handleDailyForecastChange('precipitation_probability_mean', value)}//Se asignan los valores correspondientes
-                />
-              </Flex> 
-              <Flex flexDirection={useBreakpointValue({ base: "column", md: "row", lg: "row" })} justifyContent="space-between" alignItems="center" padding="20px"> 
-                <InfoWindow
-                  label="Temperatura Máxima"
-                  value={dailyForecast.apparent_temperature_max ? `${dailyForecast.apparent_temperature_max[1]}°C` : 'No disponible'} //se evalua si existen los datos antes de asignarlos o se devuelve No disponible
-                  onChange={(value) => handleDailyForecastChange('apparent_temperature_max', value)}//Se asignan los valores correspondientes
-                />
-                <InfoWindow
-                  label="Temperatura Mínima"
-                  value={dailyForecast.apparent_temperature_min ? `${dailyForecast.apparent_temperature_min[1]}°C` : 'No disponible'} //se evalua si existen los datos antes de asignarlos o se devuelve No disponible
-                  onChange={(value) => handleDailyForecastChange('apparent_temperature_min', value)} //Se asignan los valores correspondientes
-                />
-              </Flex>
+            <Heading size="md" pt={'3%'}>Previsión para mañana</Heading>
+            <Flex flexDirection={useBreakpointValue({ base: "column", md: "row", lg: "row" })} justifyContent="space-between" alignItems="center" padding="20px">
+              <InfoWindow
+                label="Previsión para mañana"
+                value={currentWeather && weatherCodes.hasOwnProperty(currentWeather.weathercode) ? weatherCodes[currentWeather.weathercode] : 'No disponible'} //se evalua si existen los datos antes de asignarlos o se devuelve No disponible
+                onChange={(value) => handleCurrentWeatherChange('weathercode', value)}
+                customClassName='scroll-fast' // Se asigna una clase CSS específica para controlar la velocidad de desplazamiento
+              />
+              <InfoWindow
+                label="Probabilidad de Lluvia"
+                value={dailyForecast.precipitation_probability_mean ? `${dailyForecast.precipitation_probability_mean[1]}%` : 'No disponible'}//se evalua si existen los datos antes de asignarlos o se devuelve No disponible
+                onChange={(value) => handleDailyForecastChange('precipitation_probability_mean', value)}//Se asignan los valores correspondientes
+              />
             </Flex>
+            <Flex flexDirection={useBreakpointValue({ base: "column", md: "row", lg: "row" })} justifyContent="space-between" alignItems="center" padding="20px">
+              <InfoWindow
+                label="Temperatura Máxima"
+                value={dailyForecast.apparent_temperature_max ? `${dailyForecast.apparent_temperature_max[1]}°C` : 'No disponible'} //se evalua si existen los datos antes de asignarlos o se devuelve No disponible
+                onChange={(value) => handleDailyForecastChange('apparent_temperature_max', value)}//Se asignan los valores correspondientes
+              />
+              <InfoWindow
+                label="Temperatura Mínima"
+                value={dailyForecast.apparent_temperature_min ? `${dailyForecast.apparent_temperature_min[1]}°C` : 'No disponible'} //se evalua si existen los datos antes de asignarlos o se devuelve No disponible
+                onChange={(value) => handleDailyForecastChange('apparent_temperature_min', value)} //Se asignan los valores correspondientes
+              />
+            </Flex>
+          </Flex>
         </Flex>
       </Box>
     </ChakraProvider>
-);
+  );
 }
 export default WeatherDisplay;
